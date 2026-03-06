@@ -1,20 +1,26 @@
-import { getScores } from '../utils/scores'
+import { useState } from 'react'
+import { getScores, clearScores } from '../utils/scores'
 
 const RANK_MEDALS = ['🥇', '🥈', '🥉', '4th', '5th']
 
 function getFunnyMessage(score) {
-  if (score === 0)       return "Oops! Try again! 😅"
-  if (score <= 3)        return "Nice try! Keep going! 💪"
-  if (score <= 7)        return "Almost there! 🎯"
-  if (score <= 12)       return "Super flyer! 🌟"
-  if (score <= 19)       return "Incredible! You're amazing! 🔥"
+  if (score === 0)  return "Oops! Try again! 😅"
+  if (score <= 3)   return "Nice try! Keep going! 💪"
+  if (score <= 7)   return "Almost there! 🎯"
+  if (score <= 12)  return "Super flyer! 🌟"
+  if (score <= 19)  return "Incredible! You're amazing! 🔥"
   return "LEGENDARY! You're unstoppable! 🏆"
 }
 
 function GameOverScreen({ score, playerName, screenshot, onReplay, onNewGame }) {
-  const scores  = getScores()
-  const rank    = scores.findIndex(s => s.name === playerName && s.score === score)
-  const isNewBest = rank === 0 && scores.length > 0
+  const [scores, setScores] = useState(() => getScores(playerName))
+
+  const isNewBest = scores.length > 0 && scores[0] === score
+
+  function handleClear() {
+    clearScores(playerName)
+    setScores([])
+  }
 
   return (
     <div style={{ textAlign: 'center', padding: '30px 20px', maxWidth: '400px', margin: '0 auto' }}>
@@ -43,20 +49,38 @@ function GameOverScreen({ score, playerName, screenshot, onReplay, onNewGame }) 
         </p>
         {isNewBest && (
           <p style={{ color: '#ffe066', fontSize: '0.85rem', marginTop: '6px' }}>
-            New all-time high! 🎉
+            New personal best! 🎉
           </p>
         )}
       </div>
 
-      {/* Leaderboard */}
+      {/* Player's personal score history */}
       {scores.length > 0 && (
         <div style={{ marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '1.2rem', marginBottom: '10px', color: '#f7b731' }}>
-            Top Scores
-          </h2>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', marginBottom: '10px' }}>
+            <h2 style={{ fontSize: '1.2rem', color: '#f7b731', margin: 0 }}>
+              Your Best Scores
+            </h2>
+            <button
+              onClick={handleClear}
+              style={{
+                fontSize: '0.75rem',
+                padding: '3px 10px',
+                borderRadius: '8px',
+                border: '1px solid #555',
+                background: 'transparent',
+                color: '#888',
+                fontFamily: 'inherit',
+                cursor: 'pointer',
+              }}
+            >
+              Clear
+            </button>
+          </div>
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {scores.map((entry, i) => {
-              const isCurrentRun = entry.name === playerName && entry.score === score && i === rank
+            {scores.map((s, i) => {
+              const isCurrentRun = s === score && i === scores.indexOf(score)
               return (
                 <div
                   key={i}
@@ -80,14 +104,14 @@ function GameOverScreen({ score, playerName, screenshot, onReplay, onNewGame }) 
                     fontWeight: isCurrentRun ? 'bold' : 'normal',
                     marginLeft: '8px',
                   }}>
-                    {entry.name}
+                    {playerName}
                   </span>
                   <span style={{
                     color: isCurrentRun ? '#f7b731' : '#ffe082',
                     fontWeight: 'bold',
                     fontSize: '1.1rem',
                   }}>
-                    {entry.score}
+                    {s}
                   </span>
                 </div>
               )
@@ -98,8 +122,6 @@ function GameOverScreen({ score, playerName, screenshot, onReplay, onNewGame }) 
 
       {/* Action buttons */}
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-
-        {/* Primary: Replay with same settings */}
         <button
           onClick={onReplay}
           style={{
@@ -117,7 +139,6 @@ function GameOverScreen({ score, playerName, screenshot, onReplay, onNewGame }) 
           Replay 🔄
         </button>
 
-        {/* Secondary: New Game — back to name screen */}
         <button
           onClick={onNewGame}
           style={{

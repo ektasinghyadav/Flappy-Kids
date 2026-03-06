@@ -1,21 +1,26 @@
-const KEY = 'flappyKidsScores'
-const MAX  = 5
+// Scores are stored per-player so each player only sees their own history
+const KEY_PREFIX = 'flappyKids_'
+const MAX = 5
 
-export function getScores() {
+export function getScores(name) {
   try {
-    return JSON.parse(localStorage.getItem(KEY)) || []
+    return JSON.parse(localStorage.getItem(KEY_PREFIX + name)) || []
   } catch {
     return []
   }
 }
 
-// Saves the score, keeps only the top MAX entries sorted by score desc.
-// Returns the updated leaderboard array.
+// Saves score for this player, keeps their personal top MAX scores.
 export function saveScore(name, score) {
-  const scores = getScores()
-  scores.push({ name, score })
-  scores.sort((a, b) => b.score - a.score)
+  const scores = getScores(name)
+  scores.push(score)
+  scores.sort((a, b) => b - a)
   const top = scores.slice(0, MAX)
-  localStorage.setItem(KEY, JSON.stringify(top))
+  localStorage.setItem(KEY_PREFIX + name, JSON.stringify(top))
   return top
+}
+
+// Wipes all saved scores for this player.
+export function clearScores(name) {
+  localStorage.removeItem(KEY_PREFIX + name)
 }

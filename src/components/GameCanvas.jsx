@@ -244,16 +244,12 @@ function GameCanvas({ playerName, selectedFace, selectedTheme, onGameOver }) {
     function drawPipe(pipe) {
       const CAP_H = 20
       const CAP_X = 6
-      const botY = pipe.topH + GAP
+      const botY = pipe.topH + GAP   // bottom pipe starts here
       const style = colors.pipeStyle
 
+      // Only draw the BOTTOM pipe (top pipe removed)
       if (style === 'candy') {
-        // Alternating pink & red candy stripes
         const stripeH = 18
-        for (let y = 0; y < pipe.topH; y += stripeH) {
-          ctx.fillStyle = Math.floor(y / stripeH) % 2 === 0 ? colors.pipe : '#ff80ab'
-          ctx.fillRect(pipe.x, y, PIPE_W, Math.min(stripeH, pipe.topH - y))
-        }
         const botH = CANVAS_H - botY
         for (let y = 0; y < botH; y += stripeH) {
           ctx.fillStyle = Math.floor(y / stripeH) % 2 === 0 ? colors.pipe : '#ff80ab'
@@ -261,46 +257,33 @@ function GameCanvas({ playerName, selectedFace, selectedTheme, onGameOver }) {
         }
 
       } else if (style === 'bamboo') {
-        // Dark green bamboo with ring marks
         ctx.fillStyle = colors.pipe
-        ctx.fillRect(pipe.x, 0, PIPE_W, pipe.topH)
         ctx.fillRect(pipe.x, botY, PIPE_W, CANVAS_H - botY)
         ctx.fillStyle = colors.cap
-        for (let y = 15; y < pipe.topH - 6; y += 28) {
-          ctx.fillRect(pipe.x, y, PIPE_W, 6)
-        }
         for (let y = 8; y < CANVAS_H - botY - 6; y += 28) {
           ctx.fillRect(pipe.x, botY + y, PIPE_W, 6)
         }
 
       } else if (style === 'glow') {
-        // Glowing purple pipes
         ctx.shadowColor = '#ce93d8'
         ctx.shadowBlur = 14
         ctx.fillStyle = colors.pipe
-        ctx.fillRect(pipe.x, 0, PIPE_W, pipe.topH)
         ctx.fillRect(pipe.x, botY, PIPE_W, CANVAS_H - botY)
         ctx.shadowBlur = 0
 
       } else if (style === 'ice') {
-        // Icy blue pipes with highlight stripe
         ctx.fillStyle = colors.pipe
-        ctx.fillRect(pipe.x, 0, PIPE_W, pipe.topH)
         ctx.fillRect(pipe.x, botY, PIPE_W, CANVAS_H - botY)
         ctx.fillStyle = 'rgba(255,255,255,0.35)'
-        ctx.fillRect(pipe.x + 8, 0, 10, pipe.topH)
         ctx.fillRect(pipe.x + 8, botY, 10, CANVAS_H - botY)
 
       } else {
-        // Default grass-green pipes
         ctx.fillStyle = colors.pipe
-        ctx.fillRect(pipe.x, 0, PIPE_W, pipe.topH)
         ctx.fillRect(pipe.x, botY, PIPE_W, CANVAS_H - botY)
       }
 
-      // Cap (same for all styles)
+      // Bottom cap only
       ctx.fillStyle = colors.cap
-      ctx.fillRect(pipe.x - CAP_X, pipe.topH - CAP_H, PIPE_W + CAP_X * 2, CAP_H)
       ctx.fillRect(pipe.x - CAP_X, botY, PIPE_W + CAP_X * 2, CAP_H)
       ctx.shadowBlur = 0
     }
@@ -686,8 +669,8 @@ function GameCanvas({ playerName, selectedFace, selectedTheme, onGameOver }) {
 
           const inX = BIRD_X + HITBOX_R > pipe.x && BIRD_X - HITBOX_R < pipe.x + PIPE_W
           if (inX) {
-            const inGap = g.y - HITBOX_R > pipe.topH && g.y + HITBOX_R < pipe.topH + GAP
-            if (!inGap) {
+            // Only bottom pipe exists — die if bird dips below its top edge
+            if (g.y + HITBOX_R > pipe.topH + GAP) {
               g.status = 'dead'
               g.deadSince = ts
             }
