@@ -644,8 +644,8 @@ function GameCanvas({ playerName, selectedFace, selectedTheme, onGameOver }) {
             angle: 0,
           })
 
-          // 25% chance to spawn a balloon power-up
-          if (Math.random() < 0.25) {
+          // 8% chance to spawn a balloon power-up
+          if (Math.random() < 0.08) {
             g.balloons.push({ x: CANVAS_W + PIPE_W * 0.5, y: gapMid - 36 })
           }
 
