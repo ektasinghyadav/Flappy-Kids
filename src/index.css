@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #1a2a4a;
+  color: #ffffff;
+  font-family: 'Fredoka One', cursive, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Start from top on small screens so content is never clipped */
+  justify-content: flex-start;
+  min-height: 100dvh;
+  /* Respect device safe areas (notch, home bar on iOS) */
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 520px;      /* keep UI columns narrow and readable */
+}
+
+/* Make sure nothing ever causes horizontal scroll */
+* { box-sizing: border-box; }
+img, canvas { max-width: 100%; }
