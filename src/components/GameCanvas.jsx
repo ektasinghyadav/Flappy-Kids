@@ -536,14 +536,26 @@ function GameCanvas({ playerName, selectedFace, selectedTheme, onGameOver }) {
     // Draws hat / crown / sunglasses based on score — called inside drawBird (same transform)
     function drawAccessory(score) {
       if (score >= 15) {
-        // Sunglasses
-        ctx.strokeStyle = '#1a1a1a'
-        ctx.lineWidth = 2
-        ctx.fillStyle = 'rgba(30,100,220,0.45)'
-        ctx.beginPath(); ctx.ellipse(-6, -4, 7, 5, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
-        ctx.beginPath(); ctx.ellipse( 9, -4, 7, 5, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke()
-        // Bridge
-        ctx.beginPath(); ctx.moveTo(2, -4); ctx.lineTo(2, -4); ctx.stroke()
+        // Wizard hat — purple cone with wide brim and gold stars
+        ctx.strokeStyle = '#3d007a'
+        ctx.lineWidth = 1.5
+        // Cone
+        ctx.fillStyle = '#7b2fbe'
+        ctx.beginPath()
+        ctx.moveTo(-11, -BIRD_R - 1)
+        ctx.lineTo( 11, -BIRD_R - 1)
+        ctx.lineTo(  0, -BIRD_R - 26)
+        ctx.closePath(); ctx.fill(); ctx.stroke()
+        // Brim
+        ctx.fillStyle = '#5a1a9a'
+        ctx.beginPath()
+        ctx.ellipse(0, -BIRD_R - 1, 14, 4, 0, 0, Math.PI * 2)
+        ctx.fill(); ctx.stroke()
+        // Gold stars on cone
+        ctx.fillStyle = '#ffe066'
+        ctx.beginPath(); ctx.arc(-4, -BIRD_R - 10, 2,   0, Math.PI * 2); ctx.fill()
+        ctx.beginPath(); ctx.arc( 5, -BIRD_R - 17, 1.5, 0, Math.PI * 2); ctx.fill()
+        ctx.beginPath(); ctx.arc( 1, -BIRD_R -  6, 1.5, 0, Math.PI * 2); ctx.fill()
       } else if (score >= 10) {
         // Crown
         ctx.fillStyle = '#f7b731'
