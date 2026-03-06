@@ -11,7 +11,7 @@ function getFunnyMessage(score) {
   return "LEGENDARY! You're unstoppable! 🏆"
 }
 
-function GameOverScreen({ score, playerName, screenshot, onRestart }) {
+function GameOverScreen({ score, playerName, screenshot, onReplay, onNewGame }) {
   const scores  = getScores()
   const rank    = scores.findIndex(s => s.name === playerName && s.score === score)
   const isNewBest = rank === 0 && scores.length > 0
@@ -98,8 +98,10 @@ function GameOverScreen({ score, playerName, screenshot, onRestart }) {
 
       {/* Action buttons */}
       <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+
+        {/* Primary: Replay with same settings */}
         <button
-          onClick={onRestart}
+          onClick={onReplay}
           style={{
             fontSize: '1.2rem',
             padding: '12px 28px',
@@ -112,7 +114,24 @@ function GameOverScreen({ score, playerName, screenshot, onRestart }) {
             fontWeight: 'bold',
           }}
         >
-          Play Again
+          Replay 🔄
+        </button>
+
+        {/* Secondary: New Game — back to name screen */}
+        <button
+          onClick={onNewGame}
+          style={{
+            fontSize: '1.2rem',
+            padding: '12px 28px',
+            borderRadius: '12px',
+            border: '2px solid #2a4a7a',
+            background: '#0f1e3a',
+            color: '#ffffff',
+            fontFamily: 'inherit',
+            cursor: 'pointer',
+          }}
+        >
+          New Game
         </button>
 
         {screenshot && (

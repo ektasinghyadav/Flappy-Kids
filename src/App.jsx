@@ -59,7 +59,12 @@ function App() {
           score={score}
           playerName={playerName}
           screenshot={screenshot}
-          onRestart={() => {
+          onReplay={() => {
+            setScore(0)
+            setScreenshot(null)
+            setScreen('game')
+          }}
+          onNewGame={() => {
             setScore(0)
             setScreenshot(null)
             setScreen('name')
